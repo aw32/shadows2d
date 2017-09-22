@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>Shadows</title>
+<script src="js/basic/GLApp.js"></script> 
+<script src="js/basic/BasicScene.js"></script>
+<script src="js/basic/Camera.js"></script>
+<script src="js/basic/CGMath.js"></script>
+<script src="js/basic/Quaternion.js"></script>
+<script src="js/basic/Tools.js"></script>
+<script src="js/basic/PMV.js"></script>
+<script src="js/planar/Color.js"></script>
+<script src="js/planar/Viewport.js"></script>
+<script src="js/planar/Planar.js"></script>
+<script src="js/planar/PlanarLayer.js"></script>
+<script src="js/planar/PlanarObject.js"></script>
+<script src="js/planar/Rect.js"></script>
+<script src="js/planar/Point.js"></script>
+<script src="js/planar/Circle.js"></script>
+<script src="js/planar/TextureFont.js"></script>
+<script src="js/planar/TextureFontLoader.js"></script>
+<script src="js/planar/BitmapText.js"></script>
+<script src="js/planar/Line.js"></script>
+<script src="js/planar/LineStrip.js"></script>
+<script src="js/planar/Lines.js"></script>
+<script src="js/planar/Triangles.js"></script>
+<script src="js/planar/Polygon4.js"></script>
+<script src="js/basic/Program.js"></script>
+<script src="js/basic/Ressource.js"></script>
+<script src="js/sim/SimObject.js"></script>
+<script src="js/sim/SimFrustum.js"></script>
+<script src="js/sim/SimRender.js"></script>
+<script src="js/sim/SimCamera.js"></script>
+<script src="js/sim/SimShadowMap.js"></script>
+<script src="js/sim/SimShadowVolume.js"></script>
+<script src="js/gui/RelativeSize.js"></script>
+<script src="js/gui/FocusManager.js"></script>
+<script src="js/gui/TouchTracker.js"></script>
+<script src="js/gui/Label.js"></script>
+<script src="js/gui/View.js"></script>
+<script src="js/gui/CoordinateSize.js"></script>
+<script src="js/gui/FontLoader.js"></script>
+<script src="js/gui/GuiButton.js"></script>
+<script src="js/gui/BufferBar.js"></script>
+<script src="js/basic/SceneSelectionScene.js"></script>
+<script src="js/scenes/Shadowmap_tutorial_one.js"></script>
+<script src="js/scenes/Shadowmap_tutorial_two.js"></script>
+<script src="js/scenes/Shadowvolume_tutorial_one.js"></script>
+<script src="js/scenes/Shadowvolume_tutorial_two.js"></script>
+<style type="text/css">
+body{
+    background-color:#111;
+    margin:0;
+}
+#screen{
+width:100%;
+height:100%;
+}
+</style>
+<script type="text/javascript">
+function includeJs(jsFilePath,onloadfun) {
+    var js = document.createElement("script");
+
+    js.type = "text/javascript";
+    js.src = jsFilePath;
+    js.onload = onloadfun;
+
+    document.body.appendChild(js);
+}
+function loadScripts(){
+var scripts = [
+"js/basic/GLApp.js", 
+"js/basic/BasicScene.js",
+"js/basic/Camera.js",
+"js/basic/CGMath.js",
+"js/basic/Quaternion.js",
+"js/basic/Tools.js",
+"js/basic/PMV.js",
+"js/planar/Color.js",
+"js/planar/Viewport.js",
+"js/planar/Planar.js",
+"js/planar/PlanarLayer.js",
+"js/planar/PlanarObject.js",
+"js/planar/Rect.js",
+"js/planar/Point.js",
+"js/planar/Circle.js",
+"js/planar/TextureFont.js",
+"js/planar/TextureFontLoader.js",
+"js/planar/BitmapText.js",
+"js/planar/Line.js",
+"js/planar/LineStrip.js",
+"js/planar/Lines.js",
+"js/planar/Triangles.js",
+"js/planar/Polygon4.js",
+"js/basic/Program.js",
+"js/basic/Ressource.js",
+"js/sim/SimObject.js",
+"js/sim/SimFrustum.js",
+"js/sim/SimRender.js",
+"js/sim/SimCamera.js",
+"js/sim/SimShadowMap.js",
+"js/sim/SimShadowVolume.js",
+"js/gui/RelativeSize.js",
+"js/gui/FocusManager.js",
+"js/gui/TouchTracker.js",
+"js/gui/Label.js",
+"js/gui/View.js",
+"js/gui/CoordinateSize.js",
+"js/gui/FontLoader.js",
+"js/gui/GuiButton.js",
+"js/gui/BufferBar.js",
+"js/basic/SceneSelectionScene.js",
+"js/scenes/Shadowmap_tutorial_one.js",
+"js/scenes/Shadowmap_tutorial_two.js",
+"js/scenes/Shadowvolume_tutorial_one.js",
+"js/scenes/Shadowvolume_tutorial_two.js",
+];
+this.scriptNumber = scripts.length;
+//for(scr in scripts)
+//    includeJs(scripts[scr], scriptsLoaded.bind(this, scr));
+startApp();
+}
+function scriptsLoaded(num){
+    if(num == this.scriptNumber-1) // all scripts arrived
+    {
+       // give browser time to crunch the javascripts, -.-' seriously..
+        //setTimeout(startApp, 1000);
+ //       startApp();
+    }
+}
+
+function startApp(){
+        var canvas = document.getElementsByTagName('canvas')[0];
+        canvas.glapp = new GLApp(canvas, new SceneSelectionScene());
+}
+function startGL(createglapp, event){
+    event.target.parentNode.parentNode.getElementsByTagName('img')[0].style.display='none';
+    event.target.onclick = stopGL;
+    event.target.childNodes[0].data = "Stop GL";
+    var canvas = event.target.parentNode.parentNode.getElementsByTagName('canvas')[0];
+    //var glapp = canvas.onload();
+    canvas.glapp = createglapp(canvas);
+    canvas.createglapp = createglapp;
+}
+function stopGL(event){
+    var canvas = event.target.parentNode.parentNode.getElementsByTagName('canvas')[0];
+    var glapp = canvas.glapp;
+    canvas.glapp.stop();
+    canvas.glapp = null;
+    event.target.parentNode.parentNode.getElementsByTagName('img')[0].style.display='block';
+    event.target.onclick = startGL.bind(this, canvas.createglapp);
+    event.target.childNodes[0].data = "Start GL";
+}
+function drawGL(event){
+    var canvas = event.target.parentNode.parentNode.getElementsByTagName('canvas')[0];
+    if(canvas.glapp)
+        canvas.glapp.invokeDisplay();
+}
+</script>
+</head>
+<body onload="loadScripts();">
+<canvas id="screen" >
+Your browser does not support WebGL.
+</canvas>
+</body>
+</html>
